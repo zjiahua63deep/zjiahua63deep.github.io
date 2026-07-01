@@ -1,49 +1,655 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jiahua's Space | 个人主页</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            background-color: #0d1117;
-            color: #c9d1d9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            text-align: center;
-            padding: 2rem;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            background-color: #161b22;
-            max-width: 500px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        h1 { color: #58a6ff; margin-bottom: 0.5rem; }
-        p { color: #8b949e; font-size: 1.1rem; line-height: 1.6; }
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            background-color: #21262d;
-            border: 1px solid #30363d;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: #58a6ff;
-            margin-top: 1rem;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Welcome to Jiahua's Space</h1>
-        <p>这是一个专注于地缘政治、硬币收藏与全球市场洞察的深度思考空间。</p>
-        <p>个人独立作品集与个人主页正在精心构建中...</p>
-        <div class="badge">Site Hosted via GitHub Pages</div>
+<style>
+    /* ================= 核心设计系统 ================= */
+    :root {
+        --bg-color: #030712;
+        --card-bg: rgba(17, 24, 39, 0.7);
+        --card-border: rgba(255, 255, 255, 0.08);
+        --text-primary: #f3f4f6;
+        --text-secondary: #9ca3af;
+        
+        /* 专属多维色彩 */
+        --accent-geo: #3b82f6;      /* 地缘蓝 */
+        --accent-coin: #f59e0b;     /* 金币黄 */
+        --accent-market: #10b981;   /* 市场绿 */
+        
+        --glow-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+        --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* 基础重置 */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        scrollbar-width: thin;
+        scrollbar-color: var(--accent-geo) var(--bg-color);
+    }
+
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-primary);
+        font-family: 'Plus Jakarta Sans', 'Noto Serif SC', sans-serif;
+        overflow-x: hidden;
+        line-height: 1.6;
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.03) 0%, transparent 40%);
+        background-attachment: fixed;
+    }
+
+    /* 优雅过渡动画 */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseGlow {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.6; }
+    }
+
+    /* ================= 布局 & 容器 ================= */
+    .wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+
+    /* 顶部导航 */
+    header {
+        padding: 24px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--card-border);
+        backdrop-filter: blur(12px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .logo {
+        font-family: 'Cinzel', serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        background: linear-gradient(135deg, var(--text-primary), var(--accent-geo));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    nav ul {
+        display: flex;
+        gap: 32px;
+        list-style: none;
+    }
+
+    nav a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-weight: 600;
+        transition: var(--transition-smooth);
+        position: relative;
+    }
+
+    nav a:hover, nav a.active {
+        color: var(--text-primary);
+    }
+
+    nav a::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--accent-geo);
+        transition: var(--transition-smooth);
+    }
+
+    nav a:hover::after, nav a.active::after {
+        width: 100%;
+    }
+
+    /* ================= Hero 主视觉区 ================= */
+    .hero {
+        padding: 80px 0 60px;
+        text-align: center;
+        animation: fadeIn 1s var(--transition-smooth);
+        position: relative;
+    }
+
+    .hero-title-en {
+        font-family: 'Cinzel', serif;
+        font-size: 3.5rem;
+        letter-spacing: 4px;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, #fff 30%, var(--accent-coin) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        color: var(--text-primary);
+        letter-spacing: 1px;
+    }
+
+    .hero p {
+        max-width: 680px;
+        margin: 0 auto 36px;
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+
+    .cta-group {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+    }
+
+    .btn {
+        padding: 12px 28px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: var(--transition-smooth);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--accent-geo), #1d4ed8);
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-secondary {
+        background-color: transparent;
+        border: 1px solid var(--card-border);
+        color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+        background-color: rgba(255, 255, 255, 0.03);
+        border-color: var(--text-secondary);
+        transform: translateY(-2px);
+    }
+
+    /* ================= 核心板块 (Core Pillars) ================= */
+    .pillars {
+        padding: 60px 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 24px;
+    }
+
+    .pillar-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 36px;
+        backdrop-filter: blur(12px);
+        transition: var(--transition-smooth);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .pillar-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        transition: var(--transition-smooth);
+    }
+
+    /* 各个模块对应的左侧彩条 & 悬浮高亮效果 */
+    .pillar-card.geo::before { background-color: var(--accent-geo); }
+    .pillar-card.coin::before { background-color: var(--accent-coin); }
+    .pillar-card.market::before { background-color: var(--accent-market); }
+
+    .pillar-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .pillar-card.geo:hover { box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1); }
+    .pillar-card.coin:hover { box-shadow: 0 10px 30px rgba(245, 158, 11, 0.08); }
+    .pillar-card.market:hover { box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08); }
+
+    .pillar-icon {
+        font-size: 2rem;
+        margin-bottom: 24px;
+    }
+    .geo .pillar-icon { color: var(--accent-geo); }
+    .coin .pillar-icon { color: var(--accent-coin); }
+    .market .pillar-icon { color: var(--accent-market); }
+
+    .pillar-card h3 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        letter-spacing: 0.5px;
+    }
+
+    .pillar-card p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+
+    .pillar-meta {
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* ================= 交互式作品展柜 ================= */
+    .showcase {
+        padding: 80px 0;
+        border-top: 1px solid var(--card-border);
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .section-header h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        font-family: 'Noto Serif SC', serif;
+    }
+
+    .filter-container {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        background-color: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--card-border);
+        color: var(--text-secondary);
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+        background-color: var(--accent-geo);
+        color: #fff;
+        border-color: var(--accent-geo);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 24px;
+    }
+
+    .work-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: var(--transition-smooth);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .work-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .work-img-placeholder {
+        height: 180px;
+        background: linear-gradient(135deg, #1f2937, #111827);
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: rgba(255,255,255,0.15);
+        font-size: 3rem;
+    }
+
+    .work-img-placeholder::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 80%);
+    }
+
+    .work-body {
+        padding: 24px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .work-tag {
+        align-self: flex-start;
+        padding: 3px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+    }
+
+    .work-tag.geo { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .work-tag.coin { background-color: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .work-tag.market { background-color: rgba(16, 185, 129, 0.15); color: #34d399; }
+
+    .work-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text-primary);
+    }
+
+    .work-desc {
+        font-size: 0.88rem;
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+        line-height: 1.6;
+    }
+
+    .work-link {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: var(--transition-smooth);
+    }
+
+    .work-link i {
+        transition: var(--transition-smooth);
+    }
+
+    .work-link:hover {
+        color: var(--accent-geo);
+    }
+
+    .work-link:hover i {
+        transform: translateX(3px);
+    }
+
+    /* ================= 底部大格言 & 脚注 ================= */
+    .quote-section {
+        padding: 80px 0;
+        text-align: center;
+        border-top: 1px solid var(--card-border);
+        position: relative;
+    }
+
+    .quote-icon {
+        font-size: 2.5rem;
+        color: rgba(255, 255, 255, 0.05);
+        margin-bottom: 20px;
+    }
+
+    blockquote {
+        font-family: 'Cinzel', 'Noto Serif SC', serif;
+        font-size: 1.5rem;
+        font-style: italic;
+        max-width: 800px;
+        margin: 0 auto 24px;
+        color: var(--text-primary);
+        line-height: 1.6;
+    }
+
+    cite {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        font-style: normal;
+        letter-spacing: 1px;
+    }
+
+    footer {
+        padding: 40px 0;
+        border-top: 1px solid var(--card-border);
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 16px;
+    }
+
+    .social-links a {
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+        transition: var(--transition-smooth);
+    }
+
+    .social-links a:hover {
+        color: var(--text-primary);
+        transform: scale(1.1);
+    }
+
+    /* ================= 响应式适配 ================= */
+    @media (max-width: 768px) {
+        .hero-title-en { font-size: 2.5rem; }
+        .hero h1 { font-size: 1.6rem; }
+        nav ul { display: none; } /* 移动端精简菜单 */
+        .pillars { grid-template-columns: 1fr; }
+    }
+</style>
+
+
+<!-- 顶部导航 -->
+<header class="wrapper">
+    <div class="logo">
+        <i class="fa-solid fa-compass"></i> JIAHUA'S SPACE
     </div>
-</body>
-</html>
+    <nav>
+        <ul>
+            <li><a href="#home" class="active">HOME</a></li>
+            <li><a href="#fields">FIELDS</a></li>
+            <li><a href="#showcase">SHOWCASE</a></li>
+            <li><a href="https://github.com/zjiahua63deep" target="_blank">GITHUB</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- 门面视觉区 -->
+<section id="home" class="hero wrapper">
+    <div class="hero-title-en">DEEP SPACE</div>
+    <h1>地缘博弈、微观历史与市场的观察阵地</h1>
+    <p>
+        你好，我是 <strong>Jiahua</strong>！这里是我的独立学术与研究空间。
+        我专注于通过微观视角（钱币收藏与微观经济史）去回溯历史的刻痕，并结合地缘政治与资本流向框架，深度观察世界格局的变化。
+    </p>
+    <div class="cta-group">
+        <a href="#showcase" class="btn btn-primary">浏览研究论文 <i class="fa-solid fa-arrow-down"></i></a>
+        <a href="https://github.com/zjiahua63deep" target="_blank" class="btn btn-secondary"><i class="fa-brands fa-github"></i> 访问 GitHub</a>
+    </div>
+</section>
+
+<!-- 核心定位三维展板 -->
+<section id="fields" class="pillars wrapper">
+    <!-- 维度一：地缘政治 -->
+    <div class="pillar-card geo">
+        <div>
+            <div class="pillar-icon"><i class="fa-solid fa-earth-americas"></i></div>
+            <h3>地缘政治分析</h3>
+            <p>热衷于从地理环境、资源生命线（大宗商品、能源通道）以及历史惯性角度，剖析当前主权大国之间的地缘竞争与宏观格局演变。</p>
+        </div>
+        <div class="pillar-meta" style="color: var(--accent-geo);">
+            <i class="fa-solid fa-circle"></i> Geopolitics
+        </div>
+    </div>
+
+    <!-- 维度二：钱币收藏 -->
+    <div class="pillar-card coin">
+        <div>
+            <div class="pillar-icon"><i class="fa-solid fa-coins"></i></div>
+            <h3>钱币学与经济史</h3>
+            <p>硬币是历史的微缩胶卷。通过收集并研究各时期（特别是地缘剧烈动荡期）的贵金属货币成色、币制改革，窥探金融信用与帝国的兴衰史。</p>
+        </div>
+        <div class="pillar-meta" style="color: var(--accent-coin);">
+            <i class="fa-solid fa-circle"></i> Numismatics
+        </div>
+    </div>
+
+    <!-- 维度三：全球市场 -->
+    <div class="pillar-card market">
+        <div>
+            <div class="pillar-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <h3>全球大宗与市场</h3>
+            <p>跟踪大宗商品定价权、供应链流向及跨国资本的流变动向，探讨多极化世界中实体供应链和信用工具的动态博弈机制。</p>
+        </div>
+        <div class="pillar-meta" style="color: var(--accent-market);">
+            <i class="fa-solid fa-circle"></i> Global Markets
+        </div>
+    </div>
+</section>
+
+<!-- 交互式研究作品陈列柜 -->
+<section id="showcase" class="showcase wrapper">
+    <div class="section-header">
+        <h2>RESEARCH & ARCHIVES</h2>
+        <p style="color: var(--text-secondary); font-size: 0.95rem;">我的思考沉淀与藏品档案</p>
+    </div>
+
+    <!-- 分类切换按钮 -->
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="filterGallery('all')">全部作品</button>
+        <button class="filter-btn" onclick="filterGallery('geo')">地缘政治</button>
+        <button class="filter-btn" onclick="filterGallery('coin')">钱币与经济史</button>
+        <button class="filter-btn" onclick="filterGallery('market')">全球市场</button>
+    </div>
+
+    <!-- 作品网格 -->
+    <div class="grid-container">
+        <!-- 作品 1 -->
+        <div class="work-card filter-item geo">
+            <div class="work-img-placeholder"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="work-body">
+                <div>
+                    <div class="work-tag geo">地缘政治</div>
+                    <h4 class="work-title">现代海权咽喉与地缘供应链重塑</h4>
+                    <p class="work-desc">分析黑海、马六甲海峡、曼德海峡等关键海权枢纽在全球地缘摩擦中所承受的压力及应对方案。</p>
+                </div>
+                <a href="#" class="work-link">阅读全文 <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+        </div>
+
+        <!-- 作品 2 -->
+        <div class="work-card filter-item coin">
+            <div class="work-img-placeholder"><i class="fa-solid fa-landmark"></i></div>
+            <div class="work-body">
+                <div>
+                    <div class="work-tag coin">钱币学</div>
+                    <h4 class="work-title">古罗马晚期通货膨胀与第纳里乌斯银币成色考</h4>
+                    <p class="work-desc">从三世纪危机时期银币成色断崖式下跌，分析硬通货信用崩溃如何瓦解了罗马帝国的微观经济根基。</p>
+                </div>
+                <a href="#" class="work-link">阅读全文 <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+        </div>
+
+        <!-- 作品 3 -->
+        <div class="work-card filter-item market">
+            <div class="work-img-placeholder"><i class="fa-solid fa-oil-well"></i></div>
+            <div class="work-body">
+                <div>
+                    <div class="work-tag market">全球市场</div>
+                    <h4 class="work-title">石油美元的裂变与多极化大宗商品定价</h4>
+                    <p class="work-desc">探讨非美货币结算在原油及天然气贸易中的占比上升，对全球离岸流动性及资本流向的深远影响。</p>
+                </div>
+                <a href="#" class="work-link">阅读全文 <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 底部宏大格言 -->
+<section class="quote-section wrapper">
+    <div class="quote-icon"><i class="fa-solid fa-quote-left"></i></div>
+    <blockquote>
+        “History is a relentless master. It has no present, only the past rushing into the future.”
+    </blockquote>
+    <cite>— John F. Kennedy</cite>
+</section>
+
+<!-- 脚注 -->
+<footer>
+    <div class="social-links">
+        <a href="https://github.com/zjiahua63deep" target="_blank"><i class="fa-brands fa-github"></i></a>
+        <a href="mailto:zjiahua63deep@gmail.com"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+    <p>© 2026 Jiahua. Powered by GitHub Pages.</p>
+    <p style="font-size: 0.75rem; color: #4b5563; margin-top: 8px;">用匠心与思考连接微观与宏观</p>
+</footer>
+
+<!-- JavaScript 交互（分类器） -->
+<script>
+    function filterGallery(category) {
+        // 获取所有按钮和卡片
+        const buttons = document.querySelectorAll('.filter-btn');
+        const items = document.querySelectorAll('.filter-item');
+
+        // 切换按钮激活状态
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('onclick').includes(category)) {
+                btn.classList.add('active');
+            }
+        });
+
+        // 过滤卡片
+        items.forEach(item => {
+            if (category === 'all') {
+                item.style.display = 'flex';
+            } else {
+                if (item.classList.contains(category)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            }
+        });
+    }
+</script>
